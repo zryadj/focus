@@ -3744,10 +3744,12 @@ body[data-theme="night"] .tab-pane[data-tab="settings"] .settings-recycle-panel 
             <div class="panel-title-row">
               <h2>数据管理</h2>
               <div class="stats-actions">
-                <button class="ghost-button" id="exportBtn" type="button">导出数据</button>
+                <button class="ghost-button" id="importBtn" type="button">导入</button>
+                <button class="ghost-button" id="exportBtn" type="button">导出</button>
                 <button class="ghost-button" id="resetBtn" type="button">重置示例</button>
               </div>
             </div>
+            <input id="importInput" type="file" accept=".json,application/json" class="hidden">
           </section>
 
           <section class="panel settings-page-panel settings-theme-panel">
@@ -4102,6 +4104,8 @@ function cacheDom() {
   dom.interruptModal = document.getElementById("interruptModal");
   dom.toast = document.getElementById("toast");
 
+  dom.importBtn = document.getElementById("importBtn");
+  dom.importInput = document.getElementById("importInput");
   dom.exportBtn = document.getElementById("exportBtn");
   dom.resetBtn = document.getElementById("resetBtn");
 }
@@ -4126,6 +4130,8 @@ function bindEvents() {
   dom.skipBtn.addEventListener("click", skipCurrentBreak);
   dom.interruptBtn.addEventListener("click", openInterruptModal);
 
+  dom.importBtn.addEventListener("click", triggerImportData);
+  dom.importInput.addEventListener("change", handleImportDataChange);
   dom.exportBtn.addEventListener("click", exportData);
   dom.resetBtn.addEventListener("click", resetToDemoState);
 
@@ -6427,6 +6433,42 @@ function exportData() {
   a.click();
   URL.revokeObjectURL(url);
   showToast("数据已导出");
+}
+
+function triggerImportData() {
+  if (!dom.importInput) {
+    return;
+  }
+  dom.importInput.value = "";
+  dom.importInput.click();
+}
+
+async function handleImportDataChange(event) {
+  const file = event.target.files?.[0];
+  if (!file) {
+    return;
+  }
+
+  const ok = window.confirm("确定导入数据吗？当前本地数据会被覆盖。");
+  if (!ok) {
+    event.target.value = "";
+    return;
+  }
+
+  try {
+    const raw = await file.text();
+    const parsed = JSON.parse(raw);
+    const payload = parsed && typeof parsed === "object" ? parsed : {};
+    state = normalizeState(payload);
+    hydrateTimerAfterReload();
+    persistState();
+    renderAll();
+    showToast("数据已导入");
+  } catch (_error) {
+    showToast("导入失败，请检查 JSON 文件");
+  } finally {
+    event.target.value = "";
+  }
 }
 
 function resetToDemoState() {
