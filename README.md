@@ -1,1 +1,1 @@
-https://zryadj.github.io/fcous/
+https://zryadj.github.io/focus/
