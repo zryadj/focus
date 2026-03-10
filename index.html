@@ -1201,9 +1201,33 @@ textarea:focus {
 }
 
 .settings-data-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
   background:
     linear-gradient(150deg, rgba(255, 255, 255, 0.97), rgba(240, 247, 255, 0.92)),
     #fff;
+}
+
+.settings-merged-divider {
+  height: 1px;
+  margin: 14px 0;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.settings-data-panel .settings-tomato-inline {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.settings-data-panel .settings-tomato-inline .panel-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 .settings-theme-panel {
@@ -2796,7 +2820,7 @@ body[data-theme]:not([data-theme="default"]) .tab-pane[data-tab="focus"] .quick-
 }
 
 body[data-theme]:not([data-theme="default"]) .tab-pane[data-tab="focus"] .timer-core {
-  background: var(--theme-core-bg);
+  background: var(--surface-solid);
   border-color: var(--theme-border-2);
 }
 
@@ -2834,6 +2858,12 @@ body[data-theme="night"] .tab-pane[data-tab="settings"] .settings-recycle-panel 
   background: linear-gradient(160deg, var(--theme-surface-1), var(--theme-surface-2));
   border-color: var(--theme-border-1);
   box-shadow: var(--theme-shadow-soft);
+}
+
+body[data-theme] .tab-pane[data-tab="settings"] .settings-data-panel .settings-tomato-inline.settings-tomato-panel {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
 }
 
 @media (min-width: 1101px) {
@@ -3750,6 +3780,33 @@ body[data-theme="night"] .tab-pane[data-tab="settings"] .settings-recycle-panel 
               </div>
             </div>
             <input id="importInput" type="file" accept=".json,application/json" class="hidden">
+            <div class="settings-merged-divider"></div>
+            <div class="settings-tomato-inline settings-tomato-panel">
+              <div class="panel-title-row">
+                <h2>番茄参数</h2>
+                <button class="tiny-button" type="button" data-action="toggle-settings-edit" id="settingsEditBtn">编辑</button>
+              </div>
+              <p id="settingsSummary" class="muted-text">工作 25 分钟 · 短休息 5 分钟 · 长休息 15 分钟 · 每 4 轮长休息</p>
+              <form class="settings-form hidden" id="settingsForm">
+                <label>
+                  工作时长 (分钟)
+                  <input id="workMinutesInput" type="number" min="5" max="90" required="">
+                </label>
+                <label>
+                  短休息 (分钟)
+                  <input id="shortBreakInput" type="number" min="3" max="30" required="">
+                </label>
+                <label>
+                  长休息 (分钟)
+                  <input id="longBreakInput" type="number" min="5" max="45" required="">
+                </label>
+                <label>
+                  几轮后长休息
+                  <input id="longBreakEveryInput" type="number" min="2" max="8" required="">
+                </label>
+                <button class="full-button" type="submit">保存参数</button>
+              </form>
+            </div>
           </section>
 
           <section class="panel settings-page-panel settings-theme-panel">
@@ -3794,33 +3851,6 @@ body[data-theme="night"] .tab-pane[data-tab="settings"] .settings-recycle-panel 
       </span>
       <span class="theme-option-desc">沉稳专注</span>
     </button></div>
-          </section>
-
-          <section class="panel settings-page-panel settings-tomato-panel">
-            <div class="panel-title-row">
-              <h2>番茄参数</h2>
-              <button class="tiny-button" type="button" data-action="toggle-settings-edit" id="settingsEditBtn">编辑</button>
-            </div>
-            <p id="settingsSummary" class="muted-text">工作 25 分钟 · 短休息 5 分钟 · 长休息 15 分钟 · 每 4 轮长休息</p>
-            <form class="settings-form hidden" id="settingsForm">
-              <label>
-                工作时长 (分钟)
-                <input id="workMinutesInput" type="number" min="5" max="90" required="">
-              </label>
-              <label>
-                短休息 (分钟)
-                <input id="shortBreakInput" type="number" min="3" max="30" required="">
-              </label>
-              <label>
-                长休息 (分钟)
-                <input id="longBreakInput" type="number" min="5" max="45" required="">
-              </label>
-              <label>
-                几轮后长休息
-                <input id="longBreakEveryInput" type="number" min="2" max="8" required="">
-              </label>
-              <button class="full-button" type="submit">保存参数</button>
-            </form>
           </section>
 
           <section class="panel recycle-panel settings-recycle-panel">
